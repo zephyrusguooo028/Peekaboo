@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace Peekaboo;
 
-public enum Page { Overview, Disk, Projects, Processes, Cleanup, Typing, Screenshot, Battery, Network, Duplicates, Uninstall, Clipboard, WindowSnap, Settings }
+public enum Page { Overview, Disk, Projects, Processes, Cleanup, Typing, Screenshot, Battery, Network, Duplicates, Uninstall, Clipboard, WindowSnap, Growth, Settings }
 
 static class UiThread
 {

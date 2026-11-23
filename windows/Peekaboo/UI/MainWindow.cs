@@ -103,7 +103,7 @@ public sealed class MainWindow : Window
             foreach (var p in pages) _nav.Children.Add(NavItem(p));
         }
         Group(L("监控", "Monitor"), Page.Overview, Page.Processes, Page.Battery, Page.Network);
-        Group(L("空间", "Storage"), Page.Disk, Page.Projects, Page.Cleanup, Page.Duplicates, Page.Uninstall);
+        Group(L("空间", "Storage"), Page.Disk, Page.Growth, Page.Projects, Page.Cleanup, Page.Duplicates, Page.Uninstall);
         Group(L("工具", "Tools"), Page.Screenshot, Page.Clipboard, Page.WindowSnap, Page.Typing);
         var gap = new Border { Height = 10 }; _nav.Children.Add(gap);
         _nav.Children.Add(NavItem(Page.Settings));
@@ -122,6 +122,7 @@ public sealed class MainWindow : Window
         Page.Overview => (L("概览", "Overview"), "\uE9D9", Theme.CpuC),
         Page.Processes => (L("进程", "Processes"), "\uE9F5", Color.FromRgb(92, 107, 140)),
         Page.Disk => (L("磁盘", "Disk"), "\uEDA2", Theme.DiskC),
+        Page.Growth => (L("空间变化", "Disk growth"), "\uE9D2", Color.FromRgb(232, 112, 64)),
         Page.Projects => (L("项目", "Projects"), "\uE8B7", Theme.NetOutC),
         Page.Cleanup => (L("清理", "Cleanup"), "\uE74D", Color.FromRgb(237, 92, 140)),
         Page.Typing => (L("打字", "Typing"), "\uE765", Theme.MemC),
@@ -189,6 +190,7 @@ public sealed class MainWindow : Window
         {
             Page.Overview => new OverviewPage(),
             Page.Disk => new DiskPage(),
+            Page.Growth => new GrowthPage(),
             Page.Projects => new ProjectsPage(),
             Page.Processes => new ProcessesPage(),
             Page.Cleanup => new CleanupPage(),
@@ -214,6 +216,7 @@ public sealed class MainWindow : Window
         SetBadge(Page.Overview, Fmt.Pct(m.Cpu.Total), m.Cpu.Total > 0.9);
         SetBadge(Page.Processes, Fmt.Pct(m.Memory.UsedFraction), m.Memory.PressureLevel >= 4);
         SetBadge(Page.Disk, L("剩 ", "") + Fmt.DiskShort(m.Disk.Free) + L("", " free"), m.Disk.Total > 0 && m.Disk.Free < st.AlertDiskGB * 1073741824L);
+        SetBadge(Page.Growth, GrowthPage.Badge, GrowthPage.BadgeAlert);
         SetBadge(Page.Projects, ProjectModel.Shared.Projects.Count > 0 ? ProjectModel.Shared.Projects.Count.ToString() : null);
         long rec = CleanupModel.Shared.All.Where(i => i.Recommended).Sum(i => i.Size);
         SetBadge(Page.Cleanup, rec > 0 ? Fmt.Bytes(rec) : null);

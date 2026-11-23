@@ -33,6 +33,20 @@ enum Entry {
             MainActor.assumeIsolated { WindowSnapper.selfTest(to: args[i + 1]) }
             exit(0)
         }
+        if args.contains("--growth-scan") {
+            _ = NSApplication.shared
+            let t0 = Date()
+            let snap = WatchPoints.measure { _ in }
+            let gb = 1_073_741_824.0
+            print(String(format: "scan %.1fs used %.1f GB seen %.1f GB volumes %@ updateStaged %@ fullDisk %@", Date().timeIntervalSince(t0), Double(snap.used) / gb, Double(snap.seen) / gb,
+                         snap.volumes.mapValues { String(format: "%.1f", Double($0) / gb) }.description, "\(snap.updateStaged)", "\(DiskGrowth.checkFullDiskAccess())"))
+            MainActor.assumeIsolated {
+                for (p, v) in snap.sizes.sorted(by: { $0.value > $1.value }).prefix(20) {
+                    print(String(format: "%7.2f GB  %@  (%@)", Double(v) / gb, WatchPoints.name(for: p), p))
+                }
+            }
+            exit(0)
+        }
         if args.contains("--selftest") {
             SelfTest.run()
             exit(0)
@@ -42,7 +56,7 @@ enum Entry {
 }
 
 enum MainTab: String, CaseIterable, Identifiable {
-    case overview, disk, projects, processes, cleanup, typing, screenshot, battery, network, duplicates, uninstall, clipboard, windows, settings
+    case overview, disk, projects, processes, cleanup, typing, screenshot, battery, network, duplicates, uninstall, clipboard, windows, growth, settings
     var id: String { rawValue }
     var title: String {
         switch self {
@@ -59,6 +73,7 @@ enum MainTab: String, CaseIterable, Identifiable {
         case .uninstall: return L("卸载应用", "Uninstall")
         case .clipboard: return L("剪贴板", "Clipboard")
         case .windows: return L("分屏", "Window layout")
+        case .growth: return L("空间变化", "Disk growth")
         case .settings: return L("设置", "Settings")
         }
     }
@@ -77,6 +92,7 @@ enum MainTab: String, CaseIterable, Identifiable {
         case .uninstall: return "trash.square"
         case .clipboard: return "list.clipboard"
         case .windows: return "rectangle.split.3x1"
+        case .growth: return "chart.line.downtrend.xyaxis"
         case .settings: return "gearshape"
         }
     }
@@ -128,6 +144,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             ScreenshotController.shared.applyHotkey()
             ClipboardService.startIfEnabled()
             WindowSnapper.shared.start()
+            DiskGrowth.shared.start()
             Updater.shared.start()
             DesktopWidget.startIfEnabled()
             AlertManager.shared.setup()

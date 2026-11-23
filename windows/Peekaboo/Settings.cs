@@ -43,6 +43,9 @@ public sealed class Settings
 
     public bool AlertDisk { get; set; } = true;
     public int AlertDiskGB { get; set; } = 20;
+    /// Tray balloon when free space drops more than 5 GB in 24 hours (once a day at most).
+    public bool AlertDiskDrop { get; set; } = true;
+    public DateTime? LastDiskDropAlert { get; set; }
     public bool AlertMemory { get; set; } = true;
     public bool AlertCpu { get; set; }
     public int AlertCpuPercent { get; set; } = 90;

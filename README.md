@@ -34,6 +34,7 @@ macOS 14+ · Windows 10/11 · 免费开源 Free & open source (MIT)
 | **电池** | 健康度、循环次数、温度、功率，7 天电量记录，耗电大户估算 |
 | **网络** | 每个应用的上传 / 下载速率和流量（Windows 显示每个应用的连接） |
 | **截图** | 自定义快捷键，自动识别窗口，矩形 / 箭头 / 画笔 / 文字 / 马赛克（涂抹或框选，方块或模糊），**识字（OCR）**，复制、保存或贴在屏幕上 |
+| **空间变化** | 每小时记录可用空间、每天量一次各个文件夹，告诉你**最近是什么在长**（微信、QQ、下载、缓存…）；一天少了 5 GB 以上会提醒；单独列出 macOS 自身和待安装的系统更新占了多少 |
 | **剪贴板历史** | 复制过的文字、图片、链接、文件都留着，⌥⇧V（Windows Alt+Shift+V）随时调出搜索；自动跳过密码管理器的内容 |
 | **分屏** | 类似 Magnet：⌃⌥ + 方向键 / 字母（Windows Ctrl+Alt）把窗口摆到半屏、四分之一、三分之一、铺满、居中、换屏；Mac 上把窗口拖到屏幕边缘也能自动分屏 |
 | **打字统计** | 每天按键数、每小时分布、键盘热力图、最常用的键和应用。**只计数，从不记录内容** |
@@ -111,7 +112,14 @@ macOS 14+ · Windows 10/11 · 免费开源 Free & open source (MIT)
 - 「剪贴板」页可以搜索、按类型筛选、置顶常用内容。密码管理器标记为「不要记录」的内容会自动跳过；历史只存在本机。
 - 打开「选中后自动粘贴」后，选中会直接粘贴到当前应用（macOS 需要「辅助功能」权限）。
 
-**8. 分屏**
+**8. 空间变化**
+- 侧边栏「空间」›「空间变化」：上面是 24 小时 / 7 天 / 30 天少了多少和 30 天曲线，下面「最近在长」列出增长最多的文件夹（换成了看得懂的名字，比如「微信数据」）。第一天先列出目前最大的，第二天起就能对比。
+- 「空间都去哪了」把已用空间分成三块：Peekaboo 量到的文件、macOS 自身（系统、启动和更新文件、恢复、交换），以及看不到的部分。下载好等待安装的 macOS 更新会单独说明，别手动删。
+- macOS 的微信、QQ、照片、邮件等数据在受保护的文件夹里：在权限引导或这个页面开启「完全磁盘访问」后才能按应用量出来。只读大小，不读内容。
+
+<img src="docs/screenshots/mac-zh/16-growth.png" width="640" alt="空间变化">
+
+**9. 分屏**
 - 默认快捷键和 Magnet 一样：⌃⌥←/→/↑/↓ 半屏，⌃⌥U/I/J/K 四个角，⌃⌥D/F/G 三分之一，⌃⌥E/T 三分之二，⌃⌥↩ 铺满，⌃⌥C 居中，⌃⌥⌫ 还原，⌃⌥⌘←/→ 移到另一块屏幕。Windows 把 ⌃⌥ 换成 Ctrl+Alt，换屏是 Ctrl+Alt+Win+←/→。
 - 也可以像 Magnet 菜单那样用：点菜单栏图标（Windows 托盘图标），在弹窗的「分屏」里点一个布局，刚才在用的窗口就会摆过去。
 - 「分屏」页可以改每个快捷键；点任意布局会把刚才在用的窗口摆过去。
@@ -120,18 +128,18 @@ macOS 14+ · Windows 10/11 · 免费开源 Free & open source (MIT)
 
 <img src="docs/screenshots/mac-zh/15-windows.png" width="640" alt="分屏">
 
-**9. 重复文件 / 卸载应用**
+**10. 重复文件 / 卸载应用**
 - 「重复文件」扫描下载、文稿、桌面、图片等目录，找出完全相同的文件（逐字节校验）和相似图片。每组至少保留一份，不可能全删。
 - 「卸载应用」列出已安装的应用，选中后会找出它在 Library（Windows 是 AppData / ProgramData）里留下的数据。Mac 上一并移到废纸篓；Windows 会先运行应用自己的卸载程序，再清理残留。
 
-**10. 电池 / 网络 / 桌面小组件**
+**11. 电池 / 网络 / 桌面小组件**
 - 「电池」显示健康度、循环次数和 7 天电量曲线（台式机没有这一项）。
 - 「网络」显示每个应用的实时网速和累计流量（只在打开这个页面时采样）。
 - 设置 › 桌面小组件 打开一个常驻桌面的小浮窗，可以拖动、选显示内容、调透明度。
 
 <img src="docs/screenshots/mac-zh/11-battery.png" width="640" alt="电池">
 
-**11. 设置**
+**12. 设置**
 - 语言（跟随系统 / 简体中文 / English）、主题色、动画图标、菜单栏内容、提醒阈值、清理规则、项目目录、白名单。
 
 ### 隐私
@@ -197,6 +205,7 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 | **Battery** | Health, cycle count, temperature, power draw, 7-day charge history, energy hogs |
 | **Network** | Per-app upload / download rates and totals (per-app connections on Windows) |
 | **Screenshot** | Custom hotkey, window snapping, rectangle / arrow / pen / text / mosaic (brush or box, pixelate or blur), **OCR**, copy, save or pin on screen |
+| **Disk growth** | Records free space hourly and folder sizes daily, and shows **what has been growing** (chat apps, downloads, caches…); alerts when the disk loses 5 GB in a day; separates macOS's own volumes and pending system updates |
 | **Clipboard history** | Everything you copy, searchable with ⌥⇧V (Windows Alt+Shift+V); password-manager content is skipped |
 | **Window layout** | Magnet-style: ⌃⌥ + arrow / letter (Windows Ctrl+Alt) puts a window in a half, quarter, third, full screen, center or the next display; on Mac, dragging a window to a screen edge snaps it too |
 | **Typing stats** | Keystrokes per day, per hour, keyboard heatmap, top keys and apps. **Counts only, never what you type** |
@@ -223,6 +232,7 @@ Download from [Releases](https://github.com/zephyrusguooo028/Peekaboo/releases/l
 - **Clean up** — scanning never deletes anything. Recommended items are pre-selected; everything goes to the Trash by default. "Free up memory and CPU" quits selected apps like ⌘Q, never forced. Only your home folder is touched; protected and whitelisted locations are always skipped.
 - **Screenshot** — default **⌥⇧A** (Windows **Alt+Shift+A**), re-recordable on the Screenshot page. Row 1 holds tools, row 2 the selected tool's options. Return / double-click copies, ⌘Z / Ctrl+Z undoes, Esc cancels, right-click re-selects. Pins can be dragged, zoomed with the wheel and closed with a double-click. macOS asks for Screen Recording permission the first time.
 - **Clipboard** — ⌥⇧V / Alt+Shift+V opens the quick picker; the Clipboard page searches, filters and pins. Optional auto-paste needs Accessibility on macOS.
+- **Disk growth** — Storage › Disk growth shows the 24 h / 7 d / 30 d change, a 30-day chart and the folders that grew most, with readable names. On day one it lists the largest folders; comparisons start the next day. On macOS, Full Disk Access is needed to measure protected app data (WeChat, QQ, Photos, Mail); sizes only, never contents.
 - **Window layout** — Magnet's default shortcuts: ⌃⌥←/→/↑/↓ halves, ⌃⌥U/I/J/K quarters, ⌃⌥D/F/G thirds, ⌃⌥E/T two thirds, ⌃⌥↩ maximize, ⌃⌥C center, ⌃⌥⌫ restore, ⌃⌥⌘←/→ other display (Windows: Ctrl+Alt, and Ctrl+Alt+Win+←/→). Or click the menu bar icon (Windows tray icon) and pick a layout in the popover, like Magnet's menu. Every shortcut can be changed on the Window layout page. On Mac, drag a window to an edge (halves), corner (quarters), top (maximize) or bottom (thirds); Windows already snaps on drag. macOS needs Accessibility, which works without a restart.
 - **Duplicates / Uninstall** — exact duplicates are verified byte-for-byte and one copy per group is always kept; the uninstaller also removes the app's leftovers (Windows runs the app's own uninstaller first).
 - **Battery / Network / Widget** — battery health and history, per-app network traffic (sampled only while the page is open), and a floating desktop widget from Settings.
