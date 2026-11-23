@@ -82,6 +82,8 @@ static class SelfTest
             Check("newer", Updater.Newer("1.10.0", "1.9.3") && !Updater.Newer("1.1.0", "1.1"));
             L($"UPDATER logic ok, idle now {Updater.IdleTime().TotalSeconds:0}s");
 
+            L(DiskWatch.SelfCheck());
+
             var tree = new DiskScanEngine(500L << 20).Scan(Paths.Home);
             L($"HOME SCAN {Fmt.Bytes(tree.Size)} files {tree.FileCount}; top: {string.Join(", ", tree.Children.Take(6).Select(k => $"{k.Name} {Fmt.Bytes(k.Size)}"))}");
             L("OK");

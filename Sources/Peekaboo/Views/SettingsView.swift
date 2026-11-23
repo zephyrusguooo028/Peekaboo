@@ -142,6 +142,8 @@ struct SettingsView: View {
                         Stepper("\(s.alertDiskGB) GB", value: $s.alertDiskGB, in: 5...200, step: 5).disabled(!s.alertDisk)
                         Text(L("时提醒", ""))
                     }
+                    Toggle(L("磁盘一天内少了 5 GB 以上时提醒", "Alert when the disk loses more than 5 GB in a day"),
+                           isOn: Binding(get: { DiskGrowth.shared.alertEnabled }, set: { DiskGrowth.shared.alertEnabled = $0 }))
                     Toggle(L("内存压力持续紧张时提醒", "Alert when memory pressure stays critical"), isOn: $s.alertMemory)
                     HStack {
                         Toggle(L("CPU 连续 5 分钟高于", "Alert when CPU stays for 5 minutes above"), isOn: $s.alertCPU)

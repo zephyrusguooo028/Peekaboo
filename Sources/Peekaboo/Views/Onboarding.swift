@@ -6,7 +6,7 @@ import ApplicationServices
 /// System Settings. This window gets them there in one click per permission, watches for the
 /// change, and restarts Peekaboo by itself when a permission only applies after a restart.
 enum PermissionKind: String, CaseIterable, Identifiable {
-    case screen, input, accessibility
+    case screen, input, accessibility, fullDisk
     var id: String { rawValue }
 
     var title: String {
@@ -14,6 +14,7 @@ enum PermissionKind: String, CaseIterable, Identifiable {
         case .screen: return L("屏幕录制", "Screen Recording")
         case .input: return L("输入监控", "Input Monitoring")
         case .accessibility: return L("辅助功能", "Accessibility")
+        case .fullDisk: return L("完全磁盘访问", "Full Disk Access")
         }
     }
 
@@ -21,6 +22,7 @@ enum PermissionKind: String, CaseIterable, Identifiable {
         switch self {
         case .screen: return L("截图要用。只在你按下截图快捷键时读取屏幕。", "Needed for screenshots. The screen is only read when you take one.")
         case .input: return L("打字统计要用。只数按键次数，不记录内容。", "Needed for typing stats. Only key counts, never what you type.")
+        case .fullDisk: return L("「空间变化」要用：量出微信、QQ、照片等受保护文件夹各占多少。只读大小，不读内容。", "For Disk growth: measures protected folders such as WeChat, QQ and Photos. Sizes only, never contents.")
         case .accessibility: return L("分屏（移动、缩放其他应用的窗口）和剪贴板「自动粘贴」要用。", "Needed for window layout (moving and resizing other apps' windows) and clipboard auto-paste.")
         }
     }
@@ -30,6 +32,7 @@ enum PermissionKind: String, CaseIterable, Identifiable {
         case .screen: return "camera.viewfinder"
         case .input: return "keyboard"
         case .accessibility: return "accessibility"
+        case .fullDisk: return "internaldrive"
         }
     }
 
@@ -38,6 +41,7 @@ enum PermissionKind: String, CaseIterable, Identifiable {
         case .screen: return CGPreflightScreenCaptureAccess()
         case .input: return CGPreflightListenEventAccess()
         case .accessibility: return AXIsProcessTrusted()
+        case .fullDisk: return DiskGrowth.checkFullDiskAccess()
         }
     }
 
@@ -47,6 +51,7 @@ enum PermissionKind: String, CaseIterable, Identifiable {
         case .screen: anchor = "Privacy_ScreenCapture"
         case .input: anchor = "Privacy_ListenEvent"
         case .accessibility: anchor = "Privacy_Accessibility"
+        case .fullDisk: anchor = "Privacy_AllFiles"
         }
         return URL(string: "x-apple.systempreferences:com.apple.preference.security?\(anchor)")
     }
@@ -59,6 +64,9 @@ enum PermissionKind: String, CaseIterable, Identifiable {
         case .accessibility:
             let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
             _ = AXIsProcessTrustedWithOptions(opts)
+        case .fullDisk:
+            // There is no prompt API; touching a protected folder makes Peekaboo show up in the list.
+            _ = try? FileManager.default.contentsOfDirectory(atPath: Paths.h("Library/Safari").path)
         }
         if let u = settingsURL { NSWorkspace.shared.open(u) }
     }

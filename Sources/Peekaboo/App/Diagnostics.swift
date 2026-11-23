@@ -27,6 +27,11 @@ enum SelfTest {
         let third = SnapAction.leftThird.target(for: .zero, in: snapArea)!
         let tr = SnapAction.topRight.target(for: .zero, in: snapArea)!
         let ctr = SnapAction.center.target(for: CGRect(x: 0, y: 0, width: 800, height: 600), in: snapArea)!
+        let gbT: Int64 = 1_073_741_824
+        let base = GrowthSnapshot(date: Date().addingTimeInterval(-86_400), sizes: ["/a": 5 * gbT, "/b": gbT], used: 0, seen: 0)
+        let cur = GrowthSnapshot(date: Date(), sizes: ["/a": 7 * gbT, "/b": gbT, "/c": gbT / 2], used: 0, seen: 0)
+        let gd = DiskGrowth.diff(cur, base)
+        print("GROWTH \(gd.map { "\($0.path)+\($0.delta / 1_048_576)MB" }) ok=\(gd.map(\.path) == ["/a", "/c"])")
         print("SNAP leftThird \(third) topRight \(tr) center \(ctr) ok=\(third.width == 640 && tr == CGRect(x: 960, y: 25, width: 960, height: 525) && ctr.minX == 560)")
 
         let p = procs.read()
@@ -141,6 +146,14 @@ enum Snapshot {
             app.tab = .clipboard; try? await Task.sleep(for: .seconds(1)); saveWindow(to: dir.appendingPathComponent("10-clipboard.png"))
 
             app.tab = .windows; try? await Task.sleep(for: .seconds(1)); saveWindow(to: dir.appendingPathComponent("15-windows.png"))
+
+            app.tab = .growth; try? await Task.sleep(for: .seconds(1.5)); saveWindow(to: dir.appendingPathComponent("16-growth.png"))
+            do {
+                let tall = NSHostingView(rootView: GrowthView().environment(AppState.shared).frame(width: 900, height: 1900))
+                tall.frame = NSRect(x: 0, y: 0, width: 900, height: 1900)
+                try? await Task.sleep(for: .seconds(1))
+                saveView(tall, to: dir.appendingPathComponent("16-growth-full.png"))
+            }
 
             app.tab = .battery
             try? await Task.sleep(for: .seconds(1.5))

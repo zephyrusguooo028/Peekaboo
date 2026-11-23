@@ -32,6 +32,7 @@ public static class Program
             m.Ticked += Alerts.Check;
             m.Start();
             TrayController.Shared.Install();
+            DiskWatch.Start();   // after the tray icon exists, so a startup drop alert can show
             TypingMonitor.Shared.Apply();
             Screenshot.ApplyHotkey();
             ClipboardService.Start();
@@ -126,6 +127,11 @@ static class Snapshot
         while (DiskModel.Shared.Scanning) await Task.Delay(500);
         await Task.Delay(1500);
         Save(MainWindow.Instance!, Path.Combine(dir, "2-disk.png"));
+
+        // Disk growth uses made-up history in snapshot runs (see DiskWatch.Demo).
+        MainWindow.Instance!.Navigate(Page.Growth);
+        await Task.Delay(1500);
+        Save(MainWindow.Instance!, Path.Combine(dir, "16-growth.png"));
 
         MainWindow.Instance!.Navigate(Page.Projects);
         await Task.Delay(1000);

@@ -17,6 +17,7 @@ struct MainView: View {
                 }
                 Section(L("空间", "Storage")) {
                     SidebarRow(tab: .disk)
+                    SidebarRow(tab: .growth)
                     SidebarRow(tab: .projects)
                     SidebarRow(tab: .cleanup)
                     SidebarRow(tab: .duplicates)
@@ -51,6 +52,7 @@ struct MainView: View {
                 case .uninstall: UninstallView()
                 case .clipboard: ClipboardView()
                 case .windows: WindowSnapView()
+                case .growth: GrowthView()
                 case .settings: SettingsView()
                 }
             }
@@ -78,6 +80,7 @@ extension MainTab {
         case .uninstall: return Color(red: 0.80, green: 0.30, blue: 0.35)
         case .clipboard: return Color(red: 0.45, green: 0.50, blue: 0.95)
         case .windows: return Color(red: 0.20, green: 0.62, blue: 0.62)
+        case .growth: return Color(red: 0.95, green: 0.45, blue: 0.25)
         case .settings: return Color(red: 0.55, green: 0.56, blue: 0.60)
         }
     }
@@ -152,6 +155,7 @@ private struct SidebarRow: View {
         case .duplicates: return DuplicatesView.badge.map { ($0, false) }
         case .uninstall: return nil
         case .clipboard: return ClipboardView.badge.map { ($0, false) }
+        case .growth: return GrowthView.badge
         case .windows: return WindowSnapper.shared.trusted || Demo.active ? nil : (L("未授权", "Off"), false)
         case .settings: return Updater.shared.hasUpdate ? (L("新版本", "Update"), true) : nil
         }

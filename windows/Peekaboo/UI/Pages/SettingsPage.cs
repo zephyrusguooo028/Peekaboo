@@ -150,6 +150,7 @@ public sealed class SettingsPage : PageView
         // ---- alerts
         var alerts = Card(L("提醒", "Alerts"), "", V(10,
             H(8, Check(L("磁盘可用空间低于", "Alert when free disk space is below"), S.AlertDisk, on => { S.AlertDisk = on; S.Save(); }), Stepper(() => S.AlertDiskGB, v => S.AlertDiskGB = v, 5, 500, 5, " GB"), T(L("时提醒", ""), 13)),
+            Check(L("可用空间一天内减少超过 5 GB 时提醒", "Alert when free space drops by more than 5 GB in a day"), S.AlertDiskDrop, on => { S.AlertDiskDrop = on; S.Save(); }),
             Check(L("内存压力持续紧张时提醒", "Alert when memory pressure stays critical"), S.AlertMemory, on => { S.AlertMemory = on; S.Save(); }),
             H(8, Check(L("CPU 连续 5 分钟高于", "Alert when CPU stays above"), S.AlertCpu, on => { S.AlertCpu = on; S.Save(); }), Stepper(() => S.AlertCpuPercent, v => S.AlertCpuPercent = v, 50, 100, 5, "%"), T(L("时提醒", " for 5 minutes"), 13)),
             H(8, Check(L("每周检查一次，可清理空间超过", "Check weekly and notify when cleanable space exceeds"), S.CleanupTips, on => { S.CleanupTips = on; S.Save(); }), Stepper(() => S.CleanupTipGB, v => S.CleanupTipGB = v, 1, 100, 1, " GB"), T(L("时提示", ""), 13)),
